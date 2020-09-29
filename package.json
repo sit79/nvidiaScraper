@@ -1,0 +1,18 @@
+{
+  "name": "nvidiascraper",
+  "version": "1.0.0",
+  "description": "Just a little fun thing.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Stefan Tolksdorf",
+  "license": "MIT",
+  "dependencies": {
+    "puppeteer": "^5.3.1",
+    "puppeteer-extra": "^3.1.15",
+    "puppeteer-extra-plugin-adblocker": "^2.11.6",
+    "puppeteer-extra-plugin-stealth": "^2.6.1"
+  }
+}
