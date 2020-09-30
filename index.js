@@ -3,6 +3,7 @@ const StealthPlugin = require("puppeteer-extra-plugin-stealth");
 puppeteer.use(StealthPlugin());
 const AdblockerPlugin = require("puppeteer-extra-plugin-adblocker");
 puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
+const cron = require("node-cron");
 
 const scrape = (url) => {
   console.clear();
@@ -23,6 +24,8 @@ const scrape = (url) => {
         let button = document.querySelector(".cta-button").innerText;
         return button;
       });
+      let time = new Date();
+      console.log(`running, ${time.getHours()} : ${time.getMinutes()}`);
       console.table(dataObj["showTitle"]);
       console.table(dataObj["available"]);
       return resolve(dataObj);
@@ -37,4 +40,8 @@ const scrape = (url) => {
 const url =
   "https://www.nvidia.com/de-de/geforce/graphics-cards/30-series/rtx-3080/?nvid=nv-int-gfhm-33950";
 
-scrape(url);
+cron.schedule("5 * * * *", function () {
+  // crontab running every five minutes
+  // for syntax refer to: https://www.npmjs.com/package/node-cron
+  scrape(url);
+});
