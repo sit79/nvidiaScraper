@@ -10,7 +10,9 @@
   "author": "Stefan Tolksdorf",
   "license": "MIT",
   "dependencies": {
-    "node-cron": "^2.0.3",
+    "cron": "^1.8.2",
+    "discord.js": "^12.3.1",
+    "dotenv": "^8.2.0",
     "puppeteer": "^5.3.1",
     "puppeteer-extra": "^3.1.15",
     "puppeteer-extra-plugin-adblocker": "^2.11.6",
