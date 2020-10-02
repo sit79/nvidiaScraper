@@ -111,3 +111,4 @@ const jobHeartbeat = new CronJob({
 });
 
 job.start();
+jobHeartbeat.start();
