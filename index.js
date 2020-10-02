@@ -91,4 +91,23 @@ const job = new CronJob({
   runOnInit: true,
 });
 
+const jobHeartbeat = new CronJob({
+  cronTime: "0 */15 * * * *",
+  onTick: async function () {
+    message = 'I am up and running: :)'
+    const embed = await new Discord.MessageEmbed()
+        .setTitle("NVIDIA GeForce RTX 3080 scraper is healthy")
+        .setDescription(message)
+        .setColor("#0099ff");
+
+    await webhookClientHeartbeat.send('', {
+      username: "Heartbeat Checker",
+      avatarURL: "https://duckduckgo.com/i/46055555.png",
+      embeds: [embed],
+    });
+  },
+  start: true,
+  runOnInit: true,
+});
+
 job.start();
