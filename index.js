@@ -19,13 +19,16 @@ const webhookClientHeartbeat = new Discord.WebhookClient(
   process.env.HEARTBEAT_DISCORD_TOKEN
 );
 
-message = 'I am starting up...'
+let message = "I am starting up... (LINK)[www.google.com]";
 const embed = new Discord.MessageEmbed()
-    .setTitle("NVIDIA GeForce RTX 3080 scraper is starting...")
-    .setDescription(message)
-    .setColor("#ffa500");
+  .setTitle("NVIDIA GeForce RTX 3080 scraper is starting...")
+  // .addField("Inline field title", "Some value here", true)
+  // .setFooter("Some footer text here", "https://i.imgur.com/wSTFkRM.png")
+  .setTimestamp()
+  .setDescription(message)
+  .setColor("#ffa500");
 
-webhookClientHeartbeat.send('', {
+webhookClientHeartbeat.send("", {
   username: "Heartbeat Checker",
   avatarURL: "https://duckduckgo.com/i/46055555.png",
   embeds: [embed],
@@ -56,11 +59,12 @@ const scrape = (url) => {
 
       let message = dataObj["available"].toLowerCase();
 
-      if (message === 'derzeit nicht verfügbar') {
+      if (message === "derzeit nicht verfügbar") {
         const embed = await new Discord.MessageEmbed()
-            .setTitle("NVIDIA GeForce RTX 3080")
-            .setDescription(message)
-            .setColor("#ff0000");
+          .setTitle("NVIDIA GeForce RTX 3080")
+          .setTimestamp()
+          .setDescription(message)
+          .setColor("#ff0000");
 
         await webhookClientStefbot.send("Just checked.", {
           username: "stefbot",
@@ -68,11 +72,13 @@ const scrape = (url) => {
           embeds: [embed],
         });
       } else {
-        message = 'https://www.nvidia.com/de-de/geforce/graphics-cards/30-series/rtx-3080/'
+        message =
+          "https://www.nvidia.com/de-de/geforce/graphics-cards/30-series/rtx-3080/";
         const embed = await new Discord.MessageEmbed()
-            .setTitle("NVIDIA GeForce RTX 3080")
-            .setDescription(message)
-            .setColor("#7cfc00");
+          .setTitle("NVIDIA GeForce RTX 3080")
+          .setTimestamp()
+          .setDescription(message)
+          .setColor("#7cfc00");
 
         await webhookClientRobot.send("<@&760440519708639242> Just checked.", {
           username: "robot",
@@ -106,13 +112,13 @@ const job = new CronJob({
 const jobHeartbeat = new CronJob({
   cronTime: "0 */15 * * * *",
   onTick: async function () {
-    message = 'I am up and running :)'
+    message = "I am up and running :)";
     const embed = await new Discord.MessageEmbed()
-        .setTitle("NVIDIA GeForce RTX 3080 scraper is healthy")
-        .setDescription(message)
-        .setColor("#0099ff");
-
-    await webhookClientHeartbeat.send('', {
+      .setTitle("NVIDIA GeForce RTX 3080 scraper is healthy")
+      .setTimestamp()
+      .setDescription(message)
+      .setColor("#0099ff");
+    await webhookClientHeartbeat.send("", {
       username: "Heartbeat Checker",
       avatarURL: "https://duckduckgo.com/i/46055555.png",
       embeds: [embed],
