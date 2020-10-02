@@ -50,7 +50,7 @@ const scrape = (url) => {
             .setDescription(message)
             .setColor("#ff0000");
 
-        await webhookClientStefbot.send("<@&760440519708639242> Just checked.", {
+        await webhookClientStefbot.send("Just checked.", {
           username: "stefbot",
           avatarURL: "https://duckduckgo.com/i/46055555.png",
           embeds: [embed],
@@ -62,7 +62,7 @@ const scrape = (url) => {
             .setDescription(message)
             .setColor("#7cfc00");
 
-        await webhookClientRobot.send("Just checked.", {
+        await webhookClientRobot.send("<@&760440519708639242> Just checked.", {
           username: "robot",
           avatarURL: "https://duckduckgo.com/i/46055555.png",
           embeds: [embed],
