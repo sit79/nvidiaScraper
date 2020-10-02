@@ -50,7 +50,7 @@ const scrape = (url) => {
             .setDescription(message)
             .setColor("#ff0000");
 
-        await webhookClientStefbot.send("Just checked.", {
+        await webhookClientStefbot.send("<@&760440519708639242> Just checked.", {
           username: "stefbot",
           avatarURL: "https://duckduckgo.com/i/46055555.png",
           embeds: [embed],
@@ -94,7 +94,7 @@ const job = new CronJob({
 const jobHeartbeat = new CronJob({
   cronTime: "0 */15 * * * *",
   onTick: async function () {
-    message = 'I am up and running: :)'
+    message = 'I am up and running :)'
     const embed = await new Discord.MessageEmbed()
         .setTitle("NVIDIA GeForce RTX 3080 scraper is healthy")
         .setDescription(message)
