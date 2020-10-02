@@ -18,13 +18,14 @@ const webhookClientHeartbeat = new Discord.WebhookClient(
   process.env.HEARTBEAT_DISCORD_ID,
   process.env.HEARTBEAT_DISCORD_TOKEN
 );
+
 message = 'I am starting up...'
-const embed = await new Discord.MessageEmbed()
+const embed = new Discord.MessageEmbed()
     .setTitle("NVIDIA GeForce RTX 3080 scraper is starting...")
     .setDescription(message)
     .setColor("#ffa500");
 
-await webhookClientHeartbeat.send('', {
+webhookClientHeartbeat.send('', {
   username: "Heartbeat Checker",
   avatarURL: "https://duckduckgo.com/i/46055555.png",
   embeds: [embed],
