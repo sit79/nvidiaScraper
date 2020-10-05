@@ -6,10 +6,33 @@ puppeteer.use(StealthPlugin());
 const AdblockerPlugin = require("puppeteer-extra-plugin-adblocker");
 puppeteer.use(AdblockerPlugin({ blockTrackers: true }));
 const Discord = require("discord.js");
-const webhookClient = new Discord.WebhookClient(
-  process.env.DISCORD_ID,
-  process.env.DISCORD_TOKEN
+const webhookClientRobot = new Discord.WebhookClient(
+  process.env.ROBOT_DISCORD_ID,
+  process.env.ROBOT_DISCORD_TOKEN
 );
+const webhookClientStefbot = new Discord.WebhookClient(
+  process.env.STEFBOT_DISCORD_ID,
+  process.env.STEFBOT_DISCORD_TOKEN
+);
+const webhookClientHeartbeat = new Discord.WebhookClient(
+  process.env.HEARTBEAT_DISCORD_ID,
+  process.env.HEARTBEAT_DISCORD_TOKEN
+);
+
+let message = "I am starting up... (LINK)[www.google.com]";
+const embed = new Discord.MessageEmbed()
+  .setTitle("NVIDIA GeForce RTX 3080 scraper is starting...")
+  // .addField("Inline field title", "Some value here", true)
+  // .setFooter("Some footer text here", "https://i.imgur.com/wSTFkRM.png")
+  .setTimestamp()
+  .setDescription(message)
+  .setColor("#ffa500");
+
+webhookClientHeartbeat.send("", {
+  username: "Heartbeat Checker",
+  avatarURL: "https://duckduckgo.com/i/46055555.png",
+  embeds: [embed],
+});
 
 const scrape = (url) => {
   console.log("checking www.nvidia.com");
@@ -36,16 +59,34 @@ const scrape = (url) => {
 
       let message = dataObj["available"].toLowerCase();
 
-      const embed = await new Discord.MessageEmbed()
-        .setTitle("NVIDIA GeForce RTX 3080")
-        .setDescription(message)
-        .setColor("#0099ff");
+      if (message === "derzeit nicht verfügbar") {
+        const embed = await new Discord.MessageEmbed()
+          .setTitle("NVIDIA GeForce RTX 3080")
+          .setTimestamp()
+          .setDescription(message)
+          .setColor("#ff0000");
 
-      await webhookClient.send("Just checked.", {
-        username: "site9",
-        avatarURL: "https://duckduckgo.com/i/46055555.png",
-        embeds: [embed],
-      });
+        await webhookClientStefbot.send("Just checked.", {
+          username: "stefbot",
+          avatarURL: "https://duckduckgo.com/i/46055555.png",
+          embeds: [embed],
+        });
+      } else {
+        message =
+          "https://www.nvidia.com/de-de/geforce/graphics-cards/30-series/rtx-3080/";
+        const embed = await new Discord.MessageEmbed()
+          .setTitle("NVIDIA GeForce RTX 3080")
+          .setTimestamp()
+          .setDescription(message)
+          .setColor("#7cfc00");
+
+        await webhookClientRobot.send("<@&760440519708639242> Just checked.", {
+          username: "robot",
+          avatarURL: "https://duckduckgo.com/i/46055555.png",
+          embeds: [embed],
+        });
+      }
+
       return resolve(dataObj);
     } catch (e) {
       return reject(e);
@@ -59,13 +100,33 @@ const url =
   "https://www.nvidia.com/de-de/geforce/graphics-cards/30-series/rtx-3080/?nvid=nv-int-gfhm-33950";
 
 const job = new CronJob({
-  cronTime: "0 */5 * * * *",
+  cronTime: "0 */1 * * * *",
   onTick: async function () {
-    await console.log("***You will see this message every 5 minutes ***\n");
+    await console.log("***You will see this message every 1 minutes ***\n");
     await scrape(url);
   },
   start: true,
-  runOnInit: false,
+  runOnInit: true,
+});
+
+const jobHeartbeat = new CronJob({
+  cronTime: "0 */15 * * * *",
+  onTick: async function () {
+    message = "I am up and running :)";
+    const embed = await new Discord.MessageEmbed()
+      .setTitle("NVIDIA GeForce RTX 3080 scraper is healthy")
+      .setTimestamp()
+      .setDescription(message)
+      .setColor("#0099ff");
+    await webhookClientHeartbeat.send("", {
+      username: "Heartbeat Checker",
+      avatarURL: "https://duckduckgo.com/i/46055555.png",
+      embeds: [embed],
+    });
+  },
+  start: true,
+  runOnInit: true,
 });
 
 job.start();
+jobHeartbeat.start();
