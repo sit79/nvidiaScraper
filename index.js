@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 require("dotenv").config();
 const CronJob = require("cron").CronJob;
 const puppeteer = require("puppeteer-extra");
