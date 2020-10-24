@@ -21,7 +21,7 @@ const webhookClientHeartbeat = new Discord.WebhookClient(
   process.env.HEARTBEAT_DISCORD_TOKEN
 );
 
-let message = "I am starting up... (LINK)[www.google.com]";
+let message = "I am starting up...";
 const embed = new Discord.MessageEmbed()
   .setTitle("NVIDIA GeForce RTX 3080 scraper is starting...")
   // .addField("Inline field title", "Some value here", true)
