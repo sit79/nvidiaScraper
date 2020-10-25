@@ -23,7 +23,7 @@ const webhookClientHeartbeat = new Discord.WebhookClient(
 
 let message = "I am starting up...";
 const embed = new Discord.MessageEmbed()
-  .setTitle("NVIDIA GeForce RTX 3080 scraper is starting...")
+  .setTitle("NVIDIA GeForce RTX 3080 NBB scraper is starting...")
   // .addField("Inline field title", "Some value here", true)
   // .setFooter("Some footer text here", "https://i.imgur.com/wSTFkRM.png")
   .setTimestamp()
@@ -37,7 +37,7 @@ webhookClientHeartbeat.send("", {
 });
 
 const scrape = (url) => {
-  console.log("checking www.nvidia.com");
+  console.log("checking www.notebooksbilliger.de");
   return new Promise(async (resolve, reject) => {
     let browser = null;
     let dataObj = {};
@@ -46,26 +46,35 @@ const scrape = (url) => {
         headless: true,
         ignoreHTTPSErrors: true,
       });
+
+      let message = '';
+
       const page = await browser.newPage();
-      await page.goto(url, { waitUntil: "networkidle0", timeout: 60000 });
-      await page.waitForSelector(".cta-button");
-      dataObj["showTitle"] = await page.title();
-      dataObj["available"] = await page.evaluate(() => {
-        let button = document.querySelector(".cta-button").innerText;
-        return button;
-      });
-      let time = new Date();
-      console.log(`running, ${time.getHours()}:${time.getMinutes()}`);
-      console.table(dataObj["showTitle"]);
-      console.table(dataObj["available"]);
+      await page.goto(url, { waitUntil: "domcontentloaded", timeout: 15000 });
+      await page.waitForSelector(".soldOut").catch(() => message = '');
+      if(message === ''){
+        dataObj["showTitle"] = await page.title();
+        dataObj["available"] = await page.evaluate(() => {
+          let button = document.querySelector(".soldOut").innerText;
+          return button;
+        });
+        let time = new Date();
+        console.log(`running, ${time.getHours()}:${time.getMinutes()}`);
+        console.table(dataObj["showTitle"]);
+        console.table(dataObj["available"]);
 
-      let message = dataObj["available"].toLowerCase();
+        message = dataObj["available"].toLowerCase();
+      }
 
-      if (message === "derzeit nicht verfügbar") {
+      if (message === "dieses produkt ist leider ausverkauft.") {
         const embed = await new Discord.MessageEmbed()
           .setTitle("NVIDIA GeForce RTX 3080")
-          .setTimestamp()
+          .addField('URL', url, true)
+          .addField('Store', 'Notebooksbilliger.de', true)
+          .addField('Brand', 'Nvidia', true)
+          .addField('Model', '3080 Founders Edition', true)
           .setDescription(message)
+          .setTimestamp()
           .setColor("#ff0000");
 
         await webhookClientStefbot.send("Just checked.", {
@@ -75,11 +84,15 @@ const scrape = (url) => {
         });
       } else {
         message =
-          "https://www.nvidia.com/de-de/geforce/graphics-cards/30-series/rtx-3080/";
+          "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+683301";
         const embed = await new Discord.MessageEmbed()
-          .setTitle("NVIDIA GeForce RTX 3080")
-          .setTimestamp()
-          .setDescription(message)
+            .setTitle("NVIDIA GeForce RTX 3080")
+            .addField('URL', url, true)
+            .addField('Store', 'Notebooksbilliger.de', true)
+            .addField('Brand', 'Nvidia', true)
+            .addField('Model', '3080 Founders Edition', true)
+            .setDescription(message)
+            .setTimestamp()
           .setColor("#7cfc00");
 
         await webhookClientRobot.send("<@&760440519708639242> Just checked.", {
@@ -99,7 +112,8 @@ const scrape = (url) => {
 };
 
 const url =
-  "https://www.nvidia.com/de-de/geforce/graphics-cards/30-series/rtx-3080/?nvid=nv-int-gfhm-33950";
+  // "https://www.nvidia.com/de-de/geforce/graphics-cards/30-series/rtx-3080/?nvid=nv-int-gfhm-33950";
+  "https://www.notebooksbilliger.de/nvidia+geforce+rtx+3080+founders+edition+683301";
 
 const job = new CronJob({
   cronTime: "0 */1 * * * *",
@@ -116,7 +130,7 @@ const jobHeartbeat = new CronJob({
   onTick: async function () {
     message = "I am up and running :)";
     const embed = await new Discord.MessageEmbed()
-      .setTitle("NVIDIA GeForce RTX 3080 scraper is healthy")
+      .setTitle("NVIDIA GeForce RTX 3080 NBB scraper is healthy")
       .setTimestamp()
       .setDescription(message)
       .setColor("#0099ff");
